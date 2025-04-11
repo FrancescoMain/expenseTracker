@@ -1,1 +1,69 @@
+# ========== DOTNET BUILD ==========
+
+bin/
+obj/
+out/
+*.user
+*.suo
+*.cache
+*.log
+*.vspscc
+*.vssscc
+*.dbmdl
+
+# ========== VISUAL STUDIO ==========
+
+.vs/
+.vscode/
+*.ncb
+*.sdf
+*.opensdf
+*.tlog
+*.pdb
+
+# ========== DOTNET ENVIRONMENT ==========
+
+*.DotSettings.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.sln.ide
+
+# ========== OS FILES ==========
+
+Thumbs.db
+.DS_Store
+ehthumbs.db
+Desktop.ini
+
+# ========== SQLite (local db) ==========
+
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+
+# ========== SECRETS & ENV ==========
+
 .env
+.env.*
+secrets.json
+
+# ========== SWAGGER GENERATED ==========
+
+swagger/
+*.swagger.json
+
+# ========== MIGRATIONS (opzionale, se vuoi rigenerarle ogni volta) ==========
+# Migrations/
+
+# ========== LOGGING ==========
+Logs/
+*.log
+
+# ========== DOTNET TOOLS ==========
+
+*.tlog
+*.dotCover
+TestResult*/
