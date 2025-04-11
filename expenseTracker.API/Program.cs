@@ -8,7 +8,6 @@ using Microsoft.OpenApi.Models;
 
 DotNetEnv.Env.Load();
 
-
 var jwtSettings = new JwtSettings
 {
     Secret = Environment.GetEnvironmentVariable("JWT_SECRET")!,
@@ -28,12 +27,15 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 // SERVICES
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
-// CONTROLLERS
+// CONFIG
+builder.Services.AddSingleton(jwtSettings);
+
+// CONTROLLERS ✅
 builder.Services.AddControllers();
 
-//HELPERS
-builder.Services.AddSingleton(jwtSettings);
+// AUTHENTICATION
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -67,22 +69,48 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "API per la gestione spese personali"
     });
+
+    // 👇 JWT Schema
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Inserisci: Bearer {token}"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
 
+// APP
 var app = builder.Build();
 
-// MIDDLEWARES
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(); // Interfaccia Swagger
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-app.MapControllers(); // Fondamentale per attivare i controller
-
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
