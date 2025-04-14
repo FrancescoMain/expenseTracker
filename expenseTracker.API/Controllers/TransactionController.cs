@@ -20,9 +20,9 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] string? month)
     {
-        var response = await _transactionService.GetAll(GetUserId());
+        var response = await _transactionService.GetAll(GetUserId(), month);
         return StatusCode(response.StatusCode, response);
     }
 

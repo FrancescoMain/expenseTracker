@@ -9,21 +9,32 @@ public class AccountService : IAccountService
     private readonly IMapper _mapper;
 
     public AccountService(AppDbContext context, IMapper mapper)
-    {
+    {   
         _context = context;
         _mapper = mapper;
     }
 
-    public async Task<ServiceResponse<List<AccountResponseDto>>> GetAll(int userId)
+    public async Task<ServiceResponse<AccountSummaryDto>> GetAll(int userId)
     {
         var accounts = await _context.Accounts
+            .Include(a => a.Transactions)
             .Where(a => a.UserId == userId)
             .ToListAsync();
 
         var dtoList = _mapper.Map<List<AccountResponseDto>>(accounts);
+        var total = accounts.Sum(a =>
+            a.InitialBalance + a.Transactions.Sum(t => t.Amount));
 
-        return new ServiceResponse<List<AccountResponseDto>> { Data = dtoList };
+
+        var summary = new AccountSummaryDto
+        {
+            Accounts = dtoList,
+            TotalBalance = total
+        };
+
+        return new ServiceResponse<AccountSummaryDto> { Data = summary };
     }
+
 
     public async Task<ServiceResponse<AccountResponseDto>> Create(int userId, AccountCreateDto dto)
     {
@@ -103,6 +114,19 @@ public class AccountService : IAccountService
         {
             Data = "Account eliminato con successo"
         };
+    }
+
+    public async Task<decimal> GetCurrentBalance(int accountId)
+    {
+        var account = await _context.Accounts
+            .Include(a => a.Transactions)
+            .FirstOrDefaultAsync(a => a.Id == accountId);
+
+        if (account == null)
+            return 0;
+
+        var total = account.InitialBalance + account.Transactions.Sum(t => t.Amount);
+        return total;
     }
 
    

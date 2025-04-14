@@ -6,4 +6,6 @@ public class TransactionResponseDto
     public DateTime Date { get; set; }
     public string AccountName { get; set; } = string.Empty;
     public string? SubcategoryName { get; set; }
+
+    public string? CategoryName { get; set; }
 }

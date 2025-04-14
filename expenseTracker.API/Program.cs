@@ -31,6 +31,9 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IReportService, ReportService>();
+
+
 
 
 
@@ -40,6 +43,18 @@ builder.Services.AddSingleton(jwtSettings);
 
 // CONTROLLERS ✅
 builder.Services.AddControllers();
+
+//CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 
 // AUTHENTICATION
 builder.Services.AddAuthentication(options =>
@@ -116,6 +131,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors();
 
 app.MapControllers();
 

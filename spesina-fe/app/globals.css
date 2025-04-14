@@ -1,0 +1,51 @@
+@import "tailwindcss";
+@import "react-datepicker/dist/react-datepicker.css";
+
+.bc-prim {
+  background-color: #e5e5e5;
+}
+
+.bc-sec {
+  background-color: #2d3748;
+}
+
+.bc-ter {
+  background-color: #fff;
+}
+.bc-qua {
+  background-color: #4fd1c5;
+}
+.bc-qua2 {
+  background-color: #4a5759;
+}
+
+.col-prim {
+  color: #e5e5e5;
+}
+.col-sec {
+  color: #2d3748;
+}
+.col-ter {
+  color: #fff;
+}
+.col-qua {
+  color: #4fd1c5;
+}
+.col-qua2 {
+  color: #4a5759;
+}
+
+:hover.submit {
+  background-color: #dedbd2;
+}
+:hover.nav-link {
+  background-color: #fff;
+}
+
+.tracker {
+  overflow: auto;
+  max-height: 100vh;
+}
+
+:root {
+}

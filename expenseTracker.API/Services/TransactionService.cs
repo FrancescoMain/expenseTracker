@@ -14,17 +14,32 @@ public class TransactionService : ITransactionService
         _mapper = mapper;
     }
 
-    public async Task<ServiceResponse<List<TransactionResponseDto>>> GetAll(int userId)
-    {
-        var transactions = await _context.Transactions
-            .Include(t => t.Account)
-            .Include(t => t.Subcategory)
-            .Where(t => t.Account!.UserId == userId)
-            .ToListAsync();
+    public async Task<ServiceResponse<List<TransactionResponseDto>>> GetAll(int userId, string? monthStr = null)
+        {
+            DateTime? monthStart = null;
+            DateTime? monthEnd = null;
 
-        var dtoList = _mapper.Map<List<TransactionResponseDto>>(transactions);
-        return new ServiceResponse<List<TransactionResponseDto>> { Data = dtoList };
-    }
+            if (!string.IsNullOrEmpty(monthStr) && DateTime.TryParse($"{monthStr}-01", out var parsedDate))
+            {
+                monthStart = new DateTime(parsedDate.Year, parsedDate.Month, 1);
+                monthEnd = monthStart.Value.AddMonths(1);
+            }
+
+            var query = _context.Transactions
+                .Include(t => t.Account)
+                .Include(t => t.Subcategory)
+                    .ThenInclude(sc => sc.Category)
+                .Where(t => t.Account!.UserId == userId);
+
+            if (monthStart.HasValue && monthEnd.HasValue)
+            {
+                query = query.Where(t => t.Date >= monthStart && t.Date < monthEnd);
+            }
+
+            var transactions = await query.ToListAsync();
+            var dtoList = _mapper.Map<List<TransactionResponseDto>>(transactions);
+            return new ServiceResponse<List<TransactionResponseDto>> { Data = dtoList };
+        }
 
     public async Task<ServiceResponse<TransactionResponseDto>> GetById(int id, int userId)
     {
