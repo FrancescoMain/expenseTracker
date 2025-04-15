@@ -32,10 +32,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IReportService, ReportService>();
-
-
-
-
+builder.Services.AddScoped<ISavingGoalService, SavingGoalService>();
 
 
 // CONFIG
@@ -128,11 +125,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors();
-
 app.MapControllers();
-
 app.Run();
