@@ -1,6 +1,7 @@
 // app/configurazione/page.tsx
 "use client";
 
+import BudgetSettings from "@/components/BudgetSettings";
 import CategoriaSettings from "@/components/settings/CategoriaSettings";
 import SubcategoriaSettings from "@/components/settings/SubcategoriaSettings";
 import { useAuth } from "@/context/AuthContext";
@@ -30,6 +31,7 @@ export default function ConfigurazionePage() {
       </div>
 
       <SubcategoriaSettings />
+      <BudgetSettings />
     </div>
   );
 }

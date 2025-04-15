@@ -93,10 +93,38 @@ public class ReportService : IReportService
         balanceSheet.Cell(i + 2, 2).Value = accountBalances[i].Saldo;
     }
 
-    using var stream = new MemoryStream();
-    workbook.SaveAs(stream);
-    return stream.ToArray();
-}
+    // Saving Goals
+    var savingGoals = await _context.SavingGoals
+        .Include(sg => sg.Account)
+        .Include(sg => sg.Transfers)
+        .Where(sg => sg.Account!.UserId == userId)
+        .ToListAsync();
+
+    var goalsSheet = workbook.Worksheets.Add("Risparmi");
+
+    goalsSheet.Cell(1, 1).Value = "Obiettivo";
+    goalsSheet.Cell(1, 2).Value = "Conto";
+    goalsSheet.Cell(1, 3).Value = "Target (€)";
+    goalsSheet.Cell(1, 4).Value = "Risparmiato (€)";
+    goalsSheet.Cell(1, 5).Value = "% Completamento";
+
+    for (int i = 0; i < savingGoals.Count; i++)
+    {
+        var g = savingGoals[i];
+        var saved = g.Transfers.Sum(t => t.Amount);
+        var progress = g.TargetAmount > 0 ? (saved / g.TargetAmount) * 100 : 0;
+
+        goalsSheet.Cell(i + 2, 1).Value = g.Name;
+        goalsSheet.Cell(i + 2, 2).Value = g.Account?.Name ?? "-";
+        goalsSheet.Cell(i + 2, 3).Value = g.TargetAmount;
+        goalsSheet.Cell(i + 2, 4).Value = saved;
+        goalsSheet.Cell(i + 2, 5).Value = $"{progress:F2}%";
+    }
+
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        return stream.ToArray();
+    }
   public async Task<ServiceResponse<object>> GetSummary(int userId, DateTime start, DateTime end)
     {
         var transactions = await _context.Transactions

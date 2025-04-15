@@ -33,7 +33,8 @@ builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<ISavingGoalService, SavingGoalService>();
-
+builder.Services.AddScoped<ITransferService, TransferService>();
+builder.Services.AddScoped<IBudgetService, BudgetService>();
 
 // CONFIG
 builder.Services.AddSingleton(jwtSettings);

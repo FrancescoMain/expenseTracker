@@ -12,8 +12,11 @@ public class Transfer
     public int FromAccountId { get; set; }
     public Account? FromAccount { get; set; }
 
-    public int ToAccountId { get; set; }
+    public int? ToAccountId { get; set; } // 👈 deve essere nullable
     public Account? ToAccount { get; set; }
+
+    public int? SavingGoalId { get; set; } // 👈 collegamento opzionale all'obiettivo
+    public SavingGoal? SavingGoal { get; set; }
 
     public string? Note { get; set; }
 }

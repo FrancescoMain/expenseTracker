@@ -14,6 +14,9 @@ namespace ExpencseTracker.Data
         public DbSet<Transfer> Transfers => Set<Transfer>();
         public DbSet<SavingGoal> SavingGoals => Set<SavingGoal>();
 
+        public DbSet<Budget> Budgets => Set<Budget>();
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -61,6 +64,31 @@ namespace ExpencseTracker.Data
                 .HasOne(s => s.Account)
                 .WithMany()
                 .HasForeignKey(s => s.AccountId);
+
+            modelBuilder.Entity<Transfer>()
+                .HasOne(t => t.SavingGoal)
+                .WithMany(g => g.Transfers)
+                .HasForeignKey(t => t.SavingGoalId)
+                .OnDelete(DeleteBehavior.Restrict);
+                
+            modelBuilder.Entity<Budget>()
+                .HasOne(b => b.User)
+                .WithMany()
+                .HasForeignKey(b => b.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Budget>()
+                .HasOne(b => b.Category)
+                .WithMany()
+                .HasForeignKey(b => b.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Budget>()
+                .HasOne(b => b.Subcategory)
+                .WithMany()
+                .HasForeignKey(b => b.SubcategoryId)
+                .OnDelete(DeleteBehavior.SetNull);
+
         }
     }
 }

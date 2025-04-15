@@ -48,6 +48,22 @@ export default function Sidebar() {
               Report
             </a>
           </li>
+          <li>
+            <a
+              href="/saving-goals"
+              className="block nav-link rounded px-3 py-2 transition"
+            >
+              Risparmi
+            </a>
+          </li>
+          <li>
+            <a
+              href="/transfers"
+              className="block nav-link rounded px-3 py-2 transition"
+            >
+              Trasferimenti
+            </a>
+          </li>
         </ul>
       </nav>
 
